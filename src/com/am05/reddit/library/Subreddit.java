@@ -1,5 +1,7 @@
 package com.am05.reddit.library;
 
+import java.util.List;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -98,5 +100,13 @@ public class Subreddit extends Listing {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	public static List<Subreddit> fromJson(JSONObject subreddits) {
+		throw new UnsupportedOperationException("haven't implemented.");
+	}
+
+	public JSONObject toJson() {
+		throw new UnsupportedOperationException("unsupported");
 	}
 }

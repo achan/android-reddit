@@ -1,6 +1,9 @@
 package com.am05.reddit.library;
 
 import java.net.URL;
+import java.util.List;
+
+import org.json.JSONObject;
 
 public class Link extends UserSubmittedContent {
 	private boolean clicked;
@@ -128,5 +131,13 @@ public class Link extends UserSubmittedContent {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	public static List<Link> fromJson(JSONObject linksForSubreddit) {
+		throw new UnsupportedOperationException("unsupported");
+	}
+
+	public JSONObject toJson() {
+		throw new UnsupportedOperationException();
 	}
 }

@@ -1,5 +1,9 @@
 package com.am05.reddit.library;
 
+import java.util.List;
+
+import org.json.JSONObject;
+
 public class Comment extends UserSubmittedContent {
 	private String linkId;
 	private String parentId;
@@ -18,5 +22,9 @@ public class Comment extends UserSubmittedContent {
 
 	public void setParentId(String parentId) {
 		this.parentId = parentId;
+	}
+
+	public static List<Comment> fromJson(JSONObject commentsForLink) {
+		throw new UnsupportedOperationException();
 	}
 }

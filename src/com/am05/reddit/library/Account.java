@@ -1,5 +1,7 @@
 package com.am05.reddit.library;
 
+import org.json.JSONObject;
+
 public class Account implements Created {
 	private int commentKarma;
 	private long created;
@@ -99,5 +101,9 @@ public class Account implements Created {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public JSONObject toJson() {
+		throw new UnsupportedOperationException("Haven't handled this method yet.");
 	}
 }
