@@ -32,7 +32,11 @@ public class RedditDataSource {
     }
 
     public Subreddit getSubreddit(String subreddit) throws DataSourceException {
-        return new Subreddit(dataSource.getSubreddit(subreddit));
+        try {
+            return new Subreddit(dataSource.getSubreddit(subreddit));
+        } catch (JSONException e) {
+            throw new DataSourceException("Could not parse subreddits from JSON.", e);
+        }
     }
 
     public List<Subreddit> getDefaultSubreddits() throws DataSourceException {

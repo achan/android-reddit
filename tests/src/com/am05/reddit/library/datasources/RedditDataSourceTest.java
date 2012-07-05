@@ -18,12 +18,12 @@ public class RedditDataSourceTest extends AndroidTestCase {
         ds = new RedditDataSource();
         ds.setDataSource(new MockDataSource(getContext()));
     }
-    
+
     public void testGetSubreddits() {
         try {
             List<Subreddit> subreddits = ds.getSubreddits(null);
             for (Subreddit subreddit : subreddits) {
-                Log.v(TAG, "subreddit: " + subreddit);
+                Log.v(TAG, "subreddit: " + subreddit.getDisplayName());
             }
         } catch (DataSourceException e) {
             Log.e(TAG, "failed to get subreddits", e);
