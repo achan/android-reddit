@@ -3,13 +3,13 @@ package com.am05.reddit.library.datasources;
 import org.json.JSONObject;
 
 public interface JsonDataSource {
-	public JSONObject getSubredditsForAccount(JSONObject account);
+	public JSONObject getSubreddits(String sessionId) throws DataSourceException;
 
-	public JSONObject getLinksForSubreddit(JSONObject subreddit);
+	public JSONObject getLinksForSubreddit(JSONObject subreddit) throws DataSourceException;
 
-	public JSONObject getCommentsForLink(JSONObject link);
+	public JSONObject getCommentsForLink(JSONObject link) throws DataSourceException;
 	
-	public JSONObject getSubreddit(String subreddit);
+	public JSONObject getSubreddit(String subreddit) throws DataSourceException;
 	
-	public JSONObject getDefaultSubreddits();
+	public JSONObject getDefaultSubreddits() throws DataSourceException;
 }

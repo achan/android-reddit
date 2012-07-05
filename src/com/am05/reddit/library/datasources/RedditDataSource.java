@@ -2,40 +2,52 @@ package com.am05.reddit.library.datasources;
 
 import java.util.List;
 
-import com.am05.reddit.library.Account;
+import org.json.JSONException;
+
 import com.am05.reddit.library.Comment;
 import com.am05.reddit.library.Link;
 import com.am05.reddit.library.Subreddit;
 
 public class RedditDataSource {
-	public static enum Environment {
-		PRODUCTION, TEST
-	}
+    private JsonDataSource dataSource;
 
-	private JsonDataSource ds;
+    public RedditDataSource() {
+        dataSource = new LiveDataSource();
+    }
 
-	public RedditDataSource(Environment env) {
-		this.ds = env == Environment.PRODUCTION ? new LiveDataSource()
-				: new MockDataSource();
-	}
+    public List<Subreddit> getSubreddits(String sessionId) throws DataSourceException {
+        try {
+            return Subreddit.fromJson(dataSource.getSubreddits(sessionId));
+        } catch (JSONException e) {
+            throw new DataSourceException("Could not parse subreddits from JSON.", e);
+        }
+    }
 
-	public List<Subreddit> getSubredditsForAccount(Account account) {
-		return Subreddit.fromJson(ds.getSubredditsForAccount(account.toJson()));
-	}
+    public List<Link> getLinksForSubreddit(Subreddit subreddit) throws DataSourceException {
+        return Link.fromJson(dataSource.getLinksForSubreddit(subreddit.toJson()));
+    }
 
-	public List<Link> getLinksForSubreddit(Subreddit subreddit) {
-		return Link.fromJson(ds.getLinksForSubreddit(subreddit.toJson()));
-	}
+    public List<Comment> getCommentsForLink(Link link) throws DataSourceException {
+        return Comment.fromJson(dataSource.getCommentsForLink(link.toJson()));
+    }
 
-	public List<Comment> getCommentsForLink(Link link) {
-		return Comment.fromJson(ds.getCommentsForLink(link.toJson()));
-	}
+    public Subreddit getSubreddit(String subreddit) throws DataSourceException {
+        return new Subreddit(dataSource.getSubreddit(subreddit));
+    }
 
-	public Subreddit getSubreddit(String subreddit) {
-		return new Subreddit(ds.getSubreddit(subreddit));
-	}
+    public List<Subreddit> getDefaultSubreddits() throws DataSourceException {
+        try {
+            return Subreddit.fromJson(dataSource.getDefaultSubreddits());
+        } catch (JSONException e) {
+            throw new DataSourceException("Could not parse subreddits from JSON.", e);
+        }
+    }
 
-	public List<Subreddit> getDefaultSubreddits() {
-		return Subreddit.fromJson(ds.getDefaultSubreddits());
-	}
+    JsonDataSource getDataSource() {
+        return dataSource;
+    }
+
+    void setDataSource(JsonDataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 }

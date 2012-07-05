@@ -1,9 +1,7 @@
 package com.am05.reddit.library.net;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.List;
 
@@ -12,6 +10,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
@@ -20,12 +19,16 @@ import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.conn.ssl.X509HostnameVerifier;
+import org.apache.http.cookie.Cookie;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.SingleClientConnManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.util.Log;
+
+import com.am05.reddit.library.utils.StreamUtils;
 
 public class HttpHelper {
     private static final String TAG = HttpHelper.class.getName();
@@ -44,8 +47,8 @@ public class HttpHelper {
         return instance;
     }
 
-    public JSONObject getJsonFromGet(String uri) throws NetException {
-        HttpClient client = new DefaultHttpClient();
+    public JSONObject getJsonFromGet(String uri, List<Cookie> cookies) throws NetException {
+        HttpClient client = buildHttpClient(cookies);
 
         try {
             return getJsonFromResponse(client.execute(new HttpGet(uri)));
@@ -55,12 +58,36 @@ public class HttpHelper {
         }
     }
 
+    private HttpClient buildHttpClient(List<Cookie> cookies) {
+        DefaultHttpClient client = new DefaultHttpClient();
+
+        if (cookies != null && !cookies.isEmpty()) {
+            client.setCookieStore(buildCookieStore(cookies));
+        }
+
+        return client;
+    }
+
+    private CookieStore buildCookieStore(List<Cookie> cookies) {
+        Cookie[] cookieArray = new Cookie[cookies.size()];
+        return buildCookieStore(cookies.toArray(cookieArray));
+    }
+
+    private CookieStore buildCookieStore(Cookie... cookies) {
+        CookieStore cookieStore = new BasicCookieStore();
+        for (Cookie cookie : cookies) {
+            cookieStore.addCookie(cookie);
+        }
+
+        return cookieStore;
+    }
+
     private JSONObject getJsonFromResponse(HttpResponse response) throws IllegalStateException,
             IOException, JSONException {
         InputStream is = null;
         try {
             is = response.getEntity().getContent();
-            String content = convertStreamToString(is);
+            String content = StreamUtils.getInstance().convertStreamToString(is);
             Log.v(TAG, "stream content: " + content);
             return new JSONObject(content);
         } finally {
@@ -69,8 +96,17 @@ public class HttpHelper {
         }
     }
 
+    public JSONObject getJsonFromGet(String uri) throws NetException {
+        return getJsonFromGet(uri, null);
+    }
+
     public JSONObject getJsonFromPost(URI uri, List<NameValuePair> params) throws NetException {
-        HttpClient httpClient = new DefaultHttpClient();
+        return getJsonFromPost(uri, params, null);
+    }
+
+    public JSONObject getJsonFromPost(URI uri, List<NameValuePair> params, List<Cookie> cookies)
+            throws NetException {
+        HttpClient httpClient = buildHttpClient(cookies);
 
         if (SCHEME_SSL.equals(uri.getScheme())) {
             HostnameVerifier hostnameVerifier = SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
@@ -95,29 +131,5 @@ public class HttpHelper {
             throw new NetException("Error while parsing POST response from " + uri
                     + " into JSON object.", e);
         }
-    }
-
-    public String convertStreamToString(InputStream is) {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        String line;
-        StringBuilder sb = new StringBuilder();
-
-        try {
-            while ((line = reader.readLine()) != null) {
-                sb.append(line + "\n");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (is != null)
-                    is.close();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-
-        return sb.toString();
     }
 }

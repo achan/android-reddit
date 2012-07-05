@@ -1,12 +1,16 @@
 package com.am05.reddit.library;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Subreddit extends Listing {
-	private String title;
+	private static final String TAG = Subreddit.class.getName();
+	
+    private String title;
 	private String id;
 	private String description;
 	private String displayName;
@@ -41,9 +45,9 @@ public class Subreddit extends Listing {
 
 	@Override
 	public String toString() {
-		return "Subreddit:\ndisplayName: " + displayName + "\nurl: " + url
+		return "Subreddit:\n=====\ndisplayName: " + displayName + "\nurl: " + url
 				+ "\nnumSubscribers: " + numSubscribers + "\nover18: " + over18
-				+ "\ntitle: " + title + "\nid: " + id;
+				+ "\ntitle: " + title + "\nid: " + id + "\n=====\n";
 	}
 
 	public String getTitle() {
@@ -102,8 +106,16 @@ public class Subreddit extends Listing {
 		this.url = url;
 	}
 
-	public static List<Subreddit> fromJson(JSONObject subreddits) {
-		throw new UnsupportedOperationException("haven't implemented.");
+	public static List<Subreddit> fromJson(JSONObject jsonSubreddits) throws JSONException {
+	    List<Subreddit> subreddits = new ArrayList<Subreddit>();
+	    JSONObject data = jsonSubreddits.getJSONObject("data");
+	    JSONArray children = data.getJSONArray("children");
+	    
+	    for (int i = 0; i < children.length(); i++) {
+	        subreddits.add(new Subreddit(children.getJSONObject(i)));
+	    }
+	    
+	    return subreddits;
 	}
 
 	public JSONObject toJson() {
