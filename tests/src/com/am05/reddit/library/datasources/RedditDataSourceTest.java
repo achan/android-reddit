@@ -2,6 +2,8 @@ package com.am05.reddit.library.datasources;
 
 import java.util.List;
 
+import com.am05.reddit.library.Comment;
+import com.am05.reddit.library.Link;
 import com.am05.reddit.library.Subreddit;
 
 import android.test.AndroidTestCase;
@@ -26,8 +28,38 @@ public class RedditDataSourceTest extends AndroidTestCase {
                 Log.v(TAG, "subreddit: " + subreddit.getDisplayName());
             }
         } catch (DataSourceException e) {
-            Log.e(TAG, "failed to get subreddits", e);
-            fail("failed to get subreddits");
+            logAndFail("failed to get subreddits", e);
         }
+    }
+    
+    public void testGetLinksForSubreddit() {
+        try {
+            List<Link> links = ds.getLinksForSubreddit("askreddit");
+            for (Link link : links) {
+                Log.v(TAG, "link: " + link);
+            }
+        } catch (DataSourceException e) {
+            logAndFail("failed to get subreddits", e);
+        }
+    }
+    
+    public void testGetCommentsForLink() {
+        try {
+            Link link = new Link();
+            link.setPermalink("/r/nba/comments/w3bs6/50_years_later_lingering_heat_from_wilt/");
+            List<Comment> comments = ds.getCommentsForLink(link);
+            
+            for (Comment comment : comments) {
+                Log.v(TAG, "comment: " + comment);
+            }
+        } catch (DataSourceException e) {
+            logAndFail("Failed to get comments for link", e);
+        }
+        
+    }
+    
+    private void logAndFail(String message, Throwable t) {
+        Log.e(TAG, message, t);
+        fail(message);
     }
 }

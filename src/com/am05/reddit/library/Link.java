@@ -1,143 +1,207 @@
 package com.am05.reddit.library;
 
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Link extends UserSubmittedContent {
-	private boolean clicked;
-	private String domain;
-	private boolean hidden;
-	private boolean selfPost;
-	private Object media;
-	private Object mediaEmbed;
-	private int numComments;
-	private boolean over18;
-	private String permalink;
-	private boolean saved;
-	private int score;
-	private URL thumbnail;
-	private String title;
-	private String url;
+    private boolean clicked;
+    private String domain;
+    private boolean hidden;
+    private boolean selfPost;
+    private Object media;
+    private Object mediaEmbed;
+    private int numComments;
+    private boolean over18;
+    private String permalink;
+    private boolean saved;
+    private int score;
+    private URL thumbnail;
+    private String title;
+    private String url;
+    private String modHash;
 
-	public boolean isClicked() {
-		return clicked;
-	}
+    public Link() {
+    }
 
-	public void setClicked(boolean clicked) {
-		this.clicked = clicked;
-	}
+    public Link(JSONObject json) throws JsonParsingException {
+        try {
+            JSONObject data = json.getJSONObject("data");
+            domain = data.getString("domain");
+            clicked = data.getBoolean("clicked");
+            hidden = data.getBoolean("hidden");
+            selfPost = data.getBoolean("is_self");
+            media = data.optJSONObject("media");
+            numComments = data.getInt("num_comments");
+            over18 = data.optBoolean("over18", false);
+            permalink = data.getString("permalink");
+            saved = data.getBoolean("saved");
+            score = data.getInt("score");
 
-	public String getDomain() {
-		return domain;
-	}
+            String thumbString = data.optString("thumbnail");
+            if (thumbString != null && !"".equals(thumbString) && !"self".equals(thumbString)
+                    && !"default".equals(thumbString)) {
+                thumbnail = new URL(thumbString);
+            }
 
-	public void setDomain(String domain) {
-		this.domain = domain;
-	}
+            title = data.getString("title");
+            url = data.getString("url");
+        } catch (JSONException e) {
+            throw new JsonParsingException("Couldn't parse JSON.", e);
+        } catch (MalformedURLException e) {
+            throw new JsonParsingException("Couldn't parse URL in JSON value.", e);
+        }
+    }
 
-	public boolean isHidden() {
-		return hidden;
-	}
+    public boolean isClicked() {
+        return clicked;
+    }
 
-	public void setHidden(boolean hidden) {
-		this.hidden = hidden;
-	}
+    public void setClicked(boolean clicked) {
+        this.clicked = clicked;
+    }
 
-	public boolean isSelfPost() {
-		return selfPost;
-	}
+    public String getDomain() {
+        return domain;
+    }
 
-	public void setSelfPost(boolean selfPost) {
-		this.selfPost = selfPost;
-	}
+    public void setDomain(String domain) {
+        this.domain = domain;
+    }
 
-	public Object getMedia() {
-		return media;
-	}
+    public boolean isHidden() {
+        return hidden;
+    }
 
-	public void setMedia(Object media) {
-		this.media = media;
-	}
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
+    }
 
-	public Object getMediaEmbed() {
-		return mediaEmbed;
-	}
+    public boolean isSelfPost() {
+        return selfPost;
+    }
 
-	public void setMediaEmbed(Object mediaEmbed) {
-		this.mediaEmbed = mediaEmbed;
-	}
+    public void setSelfPost(boolean selfPost) {
+        this.selfPost = selfPost;
+    }
 
-	public int getNumComments() {
-		return numComments;
-	}
+    public Object getMedia() {
+        return media;
+    }
 
-	public void setNumComments(int numComments) {
-		this.numComments = numComments;
-	}
+    public void setMedia(Object media) {
+        this.media = media;
+    }
 
-	public boolean isOver18() {
-		return over18;
-	}
+    public Object getMediaEmbed() {
+        return mediaEmbed;
+    }
 
-	public void setOver18(boolean over18) {
-		this.over18 = over18;
-	}
+    public void setMediaEmbed(Object mediaEmbed) {
+        this.mediaEmbed = mediaEmbed;
+    }
 
-	public String getPermalink() {
-		return permalink;
-	}
+    public int getNumComments() {
+        return numComments;
+    }
 
-	public void setPermalink(String permalink) {
-		this.permalink = permalink;
-	}
+    public void setNumComments(int numComments) {
+        this.numComments = numComments;
+    }
 
-	public boolean isSaved() {
-		return saved;
-	}
+    public boolean isOver18() {
+        return over18;
+    }
 
-	public void setSaved(boolean saved) {
-		this.saved = saved;
-	}
+    public void setOver18(boolean over18) {
+        this.over18 = over18;
+    }
 
-	public int getScore() {
-		return score;
-	}
+    public String getPermalink() {
+        return permalink;
+    }
 
-	public void setScore(int score) {
-		this.score = score;
-	}
+    public void setPermalink(String permalink) {
+        this.permalink = permalink;
+    }
 
-	public URL getThumbnail() {
-		return thumbnail;
-	}
+    public boolean isSaved() {
+        return saved;
+    }
 
-	public void setThumbnail(URL thumbnail) {
-		this.thumbnail = thumbnail;
-	}
+    public void setSaved(boolean saved) {
+        this.saved = saved;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public int getScore() {
+        return score;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public void setScore(int score) {
+        this.score = score;
+    }
 
-	public String getUrl() {
-		return url;
-	}
+    public URL getThumbnail() {
+        return thumbnail;
+    }
 
-	public void setUrl(String url) {
-		this.url = url;
-	}
+    public void setThumbnail(URL thumbnail) {
+        this.thumbnail = thumbnail;
+    }
 
-	public static List<Link> fromJson(JSONObject linksForSubreddit) {
-		throw new UnsupportedOperationException("unsupported");
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public JSONObject toJson() {
-		throw new UnsupportedOperationException();
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    @Override
+    public String toString() {
+        return "Link [clicked=" + clicked + ", domain=" + domain + ", hidden=" + hidden
+                + ", selfPost=" + selfPost + ", media=" + media + ", mediaEmbed=" + mediaEmbed
+                + ", numComments=" + numComments + ", over18=" + over18 + ", permalink="
+                + permalink + ", saved=" + saved + ", score=" + score + ", thumbnail=" + thumbnail
+                + ", title=" + title + ", url=" + url + ", modHash=" + modHash + "]";
+    }
+
+    public static List<Link> fromJson(JSONObject jsonLinks) throws JsonParsingException {
+        List<Link> links = new ArrayList<Link>();
+        try {
+            JSONArray children = jsonLinks.getJSONObject("data").getJSONArray("children");
+            for (int i = 0; i < children.length(); i++) {
+                links.add(new Link(children.getJSONObject(i)));
+            }
+
+            return links;
+        } catch (JSONException e) {
+            throw new JsonParsingException(e);
+        }
+    }
+
+    public JSONObject toJson() {
+        throw new UnsupportedOperationException();
+    }
+
+    public String getModHash() {
+        return modHash;
+    }
+
+    public void setModHash(String modHash) {
+        this.modHash = modHash;
+    }
 }

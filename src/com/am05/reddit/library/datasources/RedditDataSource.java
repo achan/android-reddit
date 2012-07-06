@@ -5,6 +5,7 @@ import java.util.List;
 import org.json.JSONException;
 
 import com.am05.reddit.library.Comment;
+import com.am05.reddit.library.JsonParsingException;
 import com.am05.reddit.library.Link;
 import com.am05.reddit.library.Subreddit;
 
@@ -23,12 +24,25 @@ public class RedditDataSource {
         }
     }
 
-    public List<Link> getLinksForSubreddit(Subreddit subreddit) throws DataSourceException {
-        return Link.fromJson(dataSource.getLinksForSubreddit(subreddit.toJson()));
+    /**
+     * @param subreddit The unique slug that identifies the subreddit
+     * @return a list of links for the subreddit.
+     * @throws DataSourceException
+     */
+    public List<Link> getLinksForSubreddit(String subreddit) throws DataSourceException {
+        try {
+            return Link.fromJson(dataSource.getLinks(subreddit));
+        } catch (JsonParsingException e) {
+            throw new DataSourceException("Could not parse links for subreddit: " + subreddit, e);
+        }
     }
 
     public List<Comment> getCommentsForLink(Link link) throws DataSourceException {
-        return Comment.fromJson(dataSource.getCommentsForLink(link.toJson()));
+        try {
+            return Comment.fromJson(dataSource.getComments(link.getPermalink()));
+        } catch (JsonParsingException e) {
+            throw new DataSourceException("Could not parse comments for link: " + link, e);
+        }
     }
 
     public Subreddit getSubreddit(String subreddit) throws DataSourceException {

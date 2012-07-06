@@ -4,8 +4,8 @@ import org.json.JSONObject;
 
 public class Account implements Created {
 	private int commentKarma;
-	private long created;
-	private long createdUtc;
+	private double created;
+	private double createdUtc;
 	private boolean mail;
 	private boolean modMail;
 	private String id;
@@ -23,7 +23,7 @@ public class Account implements Created {
 		this.commentKarma = commentKarma;
 	}
 
-	public long getCreated() {
+	public double getCreated() {
 		return created;
 	}
 
@@ -31,7 +31,7 @@ public class Account implements Created {
 		this.created = created;
 	}
 
-	public long getCreatedUtc() {
+	public double getCreatedUtc() {
 		return createdUtc;
 	}
 

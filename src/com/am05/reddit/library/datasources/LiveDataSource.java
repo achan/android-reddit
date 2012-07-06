@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.cookie.BasicClientCookie;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.am05.reddit.library.net.HttpHelper;
@@ -26,12 +27,12 @@ public class LiveDataSource implements JsonDataSource {
         }
     }
 
-    public JSONObject getLinksForSubreddit(JSONObject subreddit) {
+    public JSONObject getLinks(String subreddit) {
         // TODO Auto-generated method stub
         return null;
     }
 
-    public JSONObject getCommentsForLink(JSONObject link) {
+    public JSONArray getComments(String permalink) {
         // TODO Auto-generated method stub
         return null;
     }
