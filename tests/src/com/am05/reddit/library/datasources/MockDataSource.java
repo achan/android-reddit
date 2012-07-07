@@ -19,8 +19,8 @@ public class MockDataSource implements JsonDataSource {
     }
 
     public JSONObject getSubreddits(String sessionId) throws DataSourceException {
+        InputStream is = buildInputStream("/reddits/mine.json");
         try {
-            InputStream is = buildInputStream("/reddits/mine.json");
             return new JSONObject(StreamUtils.getInstance().convertStreamToString(is));
         } catch (JSONException e) {
             throw new DataSourceException("Could not parse the JSON file.", e);
@@ -28,8 +28,8 @@ public class MockDataSource implements JsonDataSource {
     }
 
     public JSONObject getLinks(String subreddit) throws DataSourceException {
+        InputStream is = buildInputStream("/r/" + subreddit + ".json");
         try {
-            InputStream is = buildInputStream("/r/" + subreddit + ".json");
             return new JSONObject(StreamUtils.getInstance().convertStreamToString(is));
         } catch (JSONException e) {
             throw new DataSourceException("Could not parse the JSON file", e);
@@ -37,23 +37,30 @@ public class MockDataSource implements JsonDataSource {
     }
 
     public JSONArray getComments(String permalink) throws DataSourceException {
+        InputStream is = buildInputStream(permalink.substring(0, permalink.length() - 1) + ".json");
         try {
-            InputStream is = buildInputStream(permalink.substring(0, permalink.length() - 1)
-                    + ".json");
             return new JSONArray(StreamUtils.getInstance().convertStreamToString(is));
         } catch (JSONException e) {
             throw new DataSourceException("Could not parse JSON file.", e);
         }
     }
 
-    public JSONObject getSubreddit(String subreddit) {
-        // TODO Auto-generated method stub
-        return null;
+    public JSONObject getSubreddit(String subreddit) throws DataSourceException {
+        InputStream is = buildInputStream("/r/" + subreddit + "/about.json");
+        try {
+            return new JSONObject(StreamUtils.getInstance().convertStreamToString(is));
+        } catch (JSONException e) {
+            throw new DataSourceException("Could not parse JSON file", e);
+        }
     }
 
-    public JSONObject getDefaultSubreddits() {
-        // TODO Auto-generated method stub
-        return null;
+    public JSONObject getDefaultSubreddits() throws DataSourceException {
+        InputStream is = buildInputStream("/reddits.json");
+        try {
+            return new JSONObject(StreamUtils.getInstance().convertStreamToString(is));
+        } catch (JSONException e) {
+            throw new DataSourceException("Could not parse JSON file.", e);
+        }
     }
 
     private InputStream buildInputStream(String url) throws DataSourceException {

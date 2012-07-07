@@ -66,9 +66,9 @@ public class Comment extends UserSubmittedContent {
 
     @Override
     public String toString() {
-        return "Comment [replies=" + replies + ", getUpvotes()=" + getUpvotes()
-                + ", getDownvotes()=" + getDownvotes() + ", getAuthor()=" + getAuthor()
-                + ", getBody()=" + getBody() + ", getName()=" + getName() + "]";
+        return "Comment [getUpvotes()=" + getUpvotes() + "\n getDownvotes()=" + getDownvotes()
+                + "\n getAuthor()=" + getAuthor() + "\n getBody()=" + getBody() + "\n getName()="
+                + getName() + "\nreplies=" + replies + "]";
     }
 
     public void setLinkId(String linkId) {
