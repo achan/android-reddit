@@ -1,6 +1,8 @@
-package com.am05.reddit.library;
+package com.am05.reddit.library.things;
 
 import org.json.JSONObject;
+
+import com.am05.reddit.library.Created;
 
 public class Account implements Created {
 	private int commentKarma;

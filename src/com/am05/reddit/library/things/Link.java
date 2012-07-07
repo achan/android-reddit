@@ -1,13 +1,10 @@
-package com.am05.reddit.library;
+package com.am05.reddit.library.things;
 
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.am05.reddit.library.JsonParsingException;
 
 public class Link extends UserSubmittedContent {
     private boolean clicked;
@@ -30,32 +27,7 @@ public class Link extends UserSubmittedContent {
     }
 
     public Link(JSONObject json) throws JsonParsingException {
-        try {
-            JSONObject data = json.getJSONObject("data");
-            domain = data.getString("domain");
-            clicked = data.getBoolean("clicked");
-            hidden = data.getBoolean("hidden");
-            selfPost = data.getBoolean("is_self");
-            media = data.optJSONObject("media");
-            numComments = data.getInt("num_comments");
-            over18 = data.optBoolean("over18", false);
-            permalink = data.getString("permalink");
-            saved = data.getBoolean("saved");
-            score = data.getInt("score");
 
-            String thumbString = data.optString("thumbnail");
-            if (thumbString != null && !"".equals(thumbString) && !"self".equals(thumbString)
-                    && !"default".equals(thumbString)) {
-                thumbnail = new URL(thumbString);
-            }
-
-            title = data.getString("title");
-            url = data.getString("url");
-        } catch (JSONException e) {
-            throw new JsonParsingException("Couldn't parse JSON.", e);
-        } catch (MalformedURLException e) {
-            throw new JsonParsingException("Couldn't parse URL in JSON value.", e);
-        }
     }
 
     public boolean isClicked() {
@@ -179,29 +151,16 @@ public class Link extends UserSubmittedContent {
                 + ", title=" + title + ", url=" + url + ", modHash=" + modHash + "]";
     }
 
-    public static List<Link> fromJson(JSONObject jsonLinks) throws JsonParsingException {
-        List<Link> links = new ArrayList<Link>();
-        try {
-            JSONArray children = jsonLinks.getJSONObject("data").getJSONArray("children");
-            for (int i = 0; i < children.length(); i++) {
-                links.add(new Link(children.getJSONObject(i)));
-            }
-
-            return links;
-        } catch (JSONException e) {
-            throw new JsonParsingException(e);
-        }
-    }
-
-    public JSONObject toJson() {
-        throw new UnsupportedOperationException();
-    }
-
     public String getModHash() {
         return modHash;
     }
 
     public void setModHash(String modHash) {
         this.modHash = modHash;
+    }
+
+    @Override
+    public Kind getKind() {
+        return Kind.THREAD;
     }
 }

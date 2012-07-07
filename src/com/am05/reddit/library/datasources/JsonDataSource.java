@@ -1,6 +1,5 @@
 package com.am05.reddit.library.datasources;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 public interface JsonDataSource {
@@ -8,7 +7,7 @@ public interface JsonDataSource {
 
 	public JSONObject getLinks(String subreddit) throws DataSourceException;
 
-	public JSONArray getComments(String permalink) throws DataSourceException;
+	public JSONObject getComments(String permalink) throws DataSourceException;
 	
 	public JSONObject getSubreddit(String subreddit) throws DataSourceException;
 	

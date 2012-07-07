@@ -1,6 +1,9 @@
-package com.am05.reddit.library;
+package com.am05.reddit.library.things;
 
-public abstract class UserSubmittedContent implements Created, Votable {
+import com.am05.reddit.library.Created;
+import com.am05.reddit.library.Votable;
+
+public abstract class UserSubmittedContent extends Thing implements Created, Votable {
     private String id;
 	private int upvotes;
 	private int downvotes;

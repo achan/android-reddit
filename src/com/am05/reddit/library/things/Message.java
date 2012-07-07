@@ -1,4 +1,4 @@
-package com.am05.reddit.library;
+package com.am05.reddit.library.things;
 
 public class Message {
 	private String author;

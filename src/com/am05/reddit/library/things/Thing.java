@@ -1,17 +1,10 @@
-package com.am05.reddit.library;
+package com.am05.reddit.library.things;
 
 public abstract class Thing {
 	private String id;
 	private String name;
-	private String kind;
 	
-	public String getKind() {
-		return kind;
-	}
-	
-	public void setKind(String kind) {
-		this.kind = kind;
-	}
+	public abstract Kind getKind();
 	
 	public String getName() {
 		return name;
@@ -28,6 +21,4 @@ public abstract class Thing {
 	public void setId(String id) {
 		this.id = id;
 	}
-	
-	public abstract Object getData();
 }

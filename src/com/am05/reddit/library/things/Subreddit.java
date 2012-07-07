@@ -1,15 +1,6 @@
-package com.am05.reddit.library;
+package com.am05.reddit.library.things;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-public class Subreddit extends Listing {
-    private static final String TAG = Subreddit.class.getName();
-
+public class Subreddit extends Thing {
     private String title;
     private String id;
     private String description;
@@ -24,25 +15,16 @@ public class Subreddit extends Listing {
      */
     private String url;
 
-    public Subreddit() {
-    }
-
-    public Subreddit(JSONObject json) throws JSONException {
-        JSONObject data = json.getJSONObject("data");
-        displayName = data.getString("display_name");
-        description = data.getString("description");
-        url = data.getString("url");
-        numSubscribers = data.getInt("subscribers");
-        over18 = data.getBoolean("over18");
-        title = data.getString("title");
-        id = data.getString("id");
-    }
-
     @Override
     public String toString() {
         return "Subreddit:\n=====\ndisplayName: " + displayName + "\nurl: " + url
                 + "\nnumSubscribers: " + numSubscribers + "\nover18: " + over18 + "\ntitle: "
                 + title + "\nid: " + id + "\n=====\n";
+    }
+
+    @Override
+    public Kind getKind() {
+        return Kind.SUBREDDIT;
     }
 
     public String getTitle() {
@@ -99,21 +81,5 @@ public class Subreddit extends Listing {
 
     public void setUrl(String url) {
         this.url = url;
-    }
-
-    public static List<Subreddit> fromJson(JSONObject jsonSubreddits) throws JSONException {
-        List<Subreddit> subreddits = new ArrayList<Subreddit>();
-        JSONObject data = jsonSubreddits.getJSONObject("data");
-        JSONArray children = data.getJSONArray("children");
-
-        for (int i = 0; i < children.length(); i++) {
-            subreddits.add(new Subreddit(children.getJSONObject(i)));
-        }
-
-        return subreddits;
-    }
-
-    public JSONObject toJson() {
-        throw new UnsupportedOperationException("unsupported");
     }
 }

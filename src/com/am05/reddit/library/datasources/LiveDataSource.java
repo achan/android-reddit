@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.cookie.BasicClientCookie;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.am05.reddit.library.net.HttpHelper;
@@ -32,7 +31,7 @@ public class LiveDataSource implements JsonDataSource {
         return null;
     }
 
-    public JSONArray getComments(String permalink) {
+    public JSONObject getComments(String permalink) {
         // TODO Auto-generated method stub
         return null;
     }

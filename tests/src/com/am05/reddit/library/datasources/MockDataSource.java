@@ -36,10 +36,12 @@ public class MockDataSource implements JsonDataSource {
         }
     }
 
-    public JSONArray getComments(String permalink) throws DataSourceException {
+    public JSONObject getComments(String permalink) throws DataSourceException {
         InputStream is = buildInputStream(permalink.substring(0, permalink.length() - 1) + ".json");
         try {
-            return new JSONArray(StreamUtils.getInstance().convertStreamToString(is));
+            //1st item in array is OP
+            return new JSONArray(StreamUtils.getInstance().convertStreamToString(is))
+                    .getJSONObject(1);
         } catch (JSONException e) {
             throw new DataSourceException("Could not parse JSON file.", e);
         }
