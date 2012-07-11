@@ -32,8 +32,10 @@ public class LinkFactory implements ThingFactory {
             link.setScore(data.getInt("score"));
 
             String thumbString = data.optString("thumbnail");
+            
+            //FIXME should not ignore self/default/nsfw thumbnails
             if (thumbString != null && !"".equals(thumbString) && !"self".equals(thumbString)
-                    && !"default".equals(thumbString)) {
+                    && !"default".equals(thumbString) && !"nsfw".equals(thumbString)) {
                 link.setThumbnail(new URL(thumbString));
             }
 

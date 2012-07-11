@@ -34,12 +34,18 @@ public class RedditDataSourceTest extends AndroidTestCase {
 
     public void testGetLinksForSubreddit() {
         try {
-            List<Link> links = ds.getLinksForSubreddit("askreddit").getChildren();
+            getLinksForSubreddits("askreddit", "nba", "videos", "programming"); 
+        } catch (DataSourceException e) {
+            logAndFail("failed to get links for subreddit", e);
+        }
+    }
+    
+    private void getLinksForSubreddits(String... subreddits) throws DataSourceException {
+        for  (String subreddit : subreddits) {
+            List<Link> links = ds.getLinksForSubreddit(subreddit).getChildren();
             for (Link link : links) {
                 Log.v(TAG, "link: " + link);
             }
-        } catch (DataSourceException e) {
-            logAndFail("failed to get links for subreddit", e);
         }
     }
 
