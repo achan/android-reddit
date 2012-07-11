@@ -12,7 +12,9 @@ import com.am05.reddit.library.net.NetException;
 
 public class LiveDataSource implements JsonDataSource {
     private static final String COOKIE_KEY_REDDIT_SESSION = "reddit_session";
-    private static final String URI_SUBREDDITS = "http://www.reddit.com/reddits.json";
+    private static final String URI_BASE = "http://www.reddit.com";
+    private static final String URI_SUBREDDIT_PREFIX = URI_BASE + "/r/";
+    private static final String URI_SUBREDDITS = URI_BASE + "/reddits.json";
 
     public JSONObject getSubreddits(String sessionId) throws DataSourceException {
         Cookie cookie = new BasicClientCookie(COOKIE_KEY_REDDIT_SESSION, sessionId);
@@ -26,9 +28,13 @@ public class LiveDataSource implements JsonDataSource {
         }
     }
 
-    public JSONObject getLinks(String subreddit) {
-        // TODO Auto-generated method stub
-        return null;
+    public JSONObject getLinks(String subreddit) throws DataSourceException {
+        String subredditUrl = URI_SUBREDDIT_PREFIX + subreddit + ".json";
+        try {
+            return HttpHelper.getInstance().getJsonFromGet(subredditUrl);
+        } catch (NetException e) {
+            throw new DataSourceException("could not get JSON response from: " + subredditUrl, e);
+        }
     }
 
     public JSONObject getComments(String permalink) {
@@ -41,8 +47,11 @@ public class LiveDataSource implements JsonDataSource {
         return null;
     }
 
-    public JSONObject getDefaultSubreddits() {
-        // TODO Auto-generated method stub
-        return null;
+    public JSONObject getDefaultSubreddits() throws DataSourceException {
+        try {
+            return HttpHelper.getInstance().getJsonFromGet(URI_SUBREDDITS);
+        } catch (NetException e) {
+            throw new DataSourceException("could not get JSON response from: " + URI_SUBREDDITS, e);
+        }
     }
 }
