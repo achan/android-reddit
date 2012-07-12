@@ -54,4 +54,14 @@ public class LiveDataSource implements JsonDataSource {
             throw new DataSourceException("could not get JSON response from: " + URI_SUBREDDITS, e);
         }
     }
+
+    public JSONObject getLinksForFrontPage() throws DataSourceException {
+        String frontPageUrl = URI_BASE + "/.json";
+        try {
+            return HttpHelper.getInstance().getJsonFromGet(frontPageUrl);
+        } catch (NetException e) {
+            throw new DataSourceException("could not get JSON response from: " + frontPageUrl, e);
+
+        }
+    }
 }

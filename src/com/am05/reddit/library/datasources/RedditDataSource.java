@@ -65,6 +65,15 @@ public class RedditDataSource {
         }
     }
 
+    public Listing<Link> getLinksForFrontPage() throws DataSourceException {
+        try {
+            return new JsonToThingConverter<Listing<Link>>().convert(dataSource
+                    .getLinksForFrontPage());
+        } catch (ThingFactoryException e) {
+            throw new DataSourceException("Could not parse links for front page.", e);
+        }
+    }
+
     JsonDataSource getDataSource() {
         return dataSource;
     }

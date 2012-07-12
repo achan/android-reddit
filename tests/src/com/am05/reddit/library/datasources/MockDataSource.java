@@ -39,7 +39,7 @@ public class MockDataSource implements JsonDataSource {
     public JSONObject getComments(String permalink) throws DataSourceException {
         InputStream is = buildInputStream(permalink.substring(0, permalink.length() - 1) + ".json");
         try {
-            //1st item in array is OP
+            // 1st item in array is OP
             return new JSONArray(StreamUtils.getInstance().convertStreamToString(is))
                     .getJSONObject(1);
         } catch (JSONException e) {
@@ -70,6 +70,16 @@ public class MockDataSource implements JsonDataSource {
             return context.getAssets().open("reddit.ds" + url);
         } catch (IOException e) {
             throw new DataSourceException("Could not open stream for json file: " + url, e);
+        }
+    }
+
+    @Override
+    public JSONObject getLinksForFrontPage() throws DataSourceException {
+        InputStream is = buildInputStream("/.json");
+        try {
+            return new JSONObject(StreamUtils.getInstance().convertStreamToString(is));
+        } catch (JSONException e) {
+            throw new DataSourceException("Could not parse the JSON file", e);
         }
     }
 }

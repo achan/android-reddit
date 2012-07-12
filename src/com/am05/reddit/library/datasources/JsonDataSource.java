@@ -12,4 +12,6 @@ public interface JsonDataSource {
 	public JSONObject getSubreddit(String subreddit) throws DataSourceException;
 	
 	public JSONObject getDefaultSubreddits() throws DataSourceException;
+	
+	public JSONObject getLinksForFrontPage() throws DataSourceException;
 }
