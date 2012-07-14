@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import android.content.Context;
 
 import com.am05.reddit.library.utils.StreamUtils;
+import com.am05.reddit.library.utils.UtilsException;
 
 public class MockDataSource implements JsonDataSource {
     private Context context;
@@ -24,6 +25,8 @@ public class MockDataSource implements JsonDataSource {
             return new JSONObject(StreamUtils.getInstance().convertStreamToString(is));
         } catch (JSONException e) {
             throw new DataSourceException("Could not parse the JSON file.", e);
+        } catch (UtilsException e) {
+            throw new DataSourceException("Couldn't convert stream to String.", e);
         }
     }
 
@@ -33,6 +36,8 @@ public class MockDataSource implements JsonDataSource {
             return new JSONObject(StreamUtils.getInstance().convertStreamToString(is));
         } catch (JSONException e) {
             throw new DataSourceException("Could not parse the JSON file", e);
+        } catch (UtilsException e) {
+            throw new DataSourceException("Couldn't convert stream to String.", e);
         }
     }
 
@@ -44,6 +49,8 @@ public class MockDataSource implements JsonDataSource {
                     .getJSONObject(1);
         } catch (JSONException e) {
             throw new DataSourceException("Could not parse JSON file.", e);
+        } catch (UtilsException e) {
+            throw new DataSourceException("Couldn't convert stream to String.", e);
         }
     }
 
@@ -53,6 +60,8 @@ public class MockDataSource implements JsonDataSource {
             return new JSONObject(StreamUtils.getInstance().convertStreamToString(is));
         } catch (JSONException e) {
             throw new DataSourceException("Could not parse JSON file", e);
+        } catch (UtilsException e) {
+            throw new DataSourceException("Couldn't convert stream to String.", e);
         }
     }
 
@@ -62,6 +71,8 @@ public class MockDataSource implements JsonDataSource {
             return new JSONObject(StreamUtils.getInstance().convertStreamToString(is));
         } catch (JSONException e) {
             throw new DataSourceException("Could not parse JSON file.", e);
+        } catch (UtilsException e) {
+            throw new DataSourceException("Couldn't convert stream to String.", e);
         }
     }
 
@@ -80,6 +91,8 @@ public class MockDataSource implements JsonDataSource {
             return new JSONObject(StreamUtils.getInstance().convertStreamToString(is));
         } catch (JSONException e) {
             throw new DataSourceException("Could not parse the JSON file", e);
+        } catch (UtilsException e) {
+            throw new DataSourceException("Couldn't convert stream to String.", e);
         }
     }
 }

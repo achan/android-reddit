@@ -1,6 +1,8 @@
 package com.am05.reddit.library.things;
 
 public class Subreddit extends Thing {
+    private static final long serialVersionUID = 1L;
+
     private String title;
     private String id;
     private String description;

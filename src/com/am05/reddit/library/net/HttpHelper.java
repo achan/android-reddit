@@ -23,12 +23,14 @@ import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.SingleClientConnManager;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.util.Log;
 
 import com.am05.reddit.library.utils.StreamUtils;
+import com.am05.reddit.library.utils.UtilsException;
 
 public class HttpHelper {
     private static final String TAG = HttpHelper.class.getName();
@@ -47,14 +49,14 @@ public class HttpHelper {
         return instance;
     }
 
-    public JSONObject getJsonFromGet(String uri, List<Cookie> cookies) throws NetException {
+    public JSONObject getJsonObjectFromGet(String uri, List<Cookie> cookies) throws NetException {
         HttpClient client = buildHttpClient(cookies);
 
         try {
-            return getJsonFromResponse(client.execute(new HttpGet(uri)));
+            return getJsonObjectFromResponse(client.execute(new HttpGet(uri)));
         } catch (Exception e) {
             throw new NetException("Error while parsing GET response from " + uri
-                    + " into JSON object.", e);
+                    + " into JSON object: " + e.getMessage(), e);
         }
     }
 
@@ -82,30 +84,64 @@ public class HttpHelper {
         return cookieStore;
     }
 
-    private JSONObject getJsonFromResponse(HttpResponse response) throws IllegalStateException,
-            IOException, JSONException {
+    private JSONArray getJsonArrayFromResponse(HttpResponse response) throws IllegalStateException,
+            JSONException, IOException, UtilsException {
+        return new JSONArray(responseToString(response));
+    }
+
+    private String responseToString(HttpResponse response) throws IOException,
+            IllegalStateException, UtilsException {
         InputStream is = null;
         try {
             is = response.getEntity().getContent();
             String content = StreamUtils.getInstance().convertStreamToString(is);
-            Log.v(TAG, "stream content: " + content);
-            return new JSONObject(content);
+
+            String contentSnippet;
+            if (content.length() > 250) {
+                contentSnippet = content.substring(0, 100) + "###SNIPPET###"
+                        + content.substring(content.length() - 100);
+            } else {
+                contentSnippet = content;
+            }
+
+            Log.v(TAG, "stream content: " + contentSnippet);
+            return content;
         } finally {
             if (is != null)
                 is.close();
         }
     }
 
-    public JSONObject getJsonFromGet(String uri) throws NetException {
-        return getJsonFromGet(uri, null);
+    private JSONObject getJsonObjectFromResponse(HttpResponse response)
+            throws IllegalStateException, IOException, JSONException, UtilsException {
+        return new JSONObject(responseToString(response));
     }
 
-    public JSONObject getJsonFromPost(URI uri, List<NameValuePair> params) throws NetException {
-        return getJsonFromPost(uri, params, null);
+    public JSONArray getJsonArrayFromGet(String uri, List<Cookie> cookies) throws NetException {
+        HttpClient client = buildHttpClient(cookies);
+
+        try {
+            return getJsonArrayFromResponse(client.execute(new HttpGet(uri)));
+        } catch (Exception e) {
+            throw new NetException("Could not parse response into JSON array.", e);
+        }
     }
 
-    public JSONObject getJsonFromPost(URI uri, List<NameValuePair> params, List<Cookie> cookies)
+    public JSONArray getJsonArrayFromGet(String uri) throws NetException {
+        return getJsonArrayFromGet(uri, null);
+    }
+
+    public JSONObject getJsonObjectFromGet(String uri) throws NetException {
+        return getJsonObjectFromGet(uri, null);
+    }
+
+    public JSONObject getJsonObjectFromPost(URI uri, List<NameValuePair> params)
             throws NetException {
+        return getJsonObjectFromPost(uri, params, null);
+    }
+
+    public JSONObject getJsonObjectFromPost(URI uri, List<NameValuePair> params,
+            List<Cookie> cookies) throws NetException {
         HttpClient httpClient = buildHttpClient(cookies);
 
         if (SCHEME_SSL.equals(uri.getScheme())) {
@@ -126,7 +162,7 @@ public class HttpHelper {
 
         try {
             post.setEntity(new UrlEncodedFormEntity(params));
-            return getJsonFromResponse(httpClient.execute(post));
+            return getJsonObjectFromResponse(httpClient.execute(post));
         } catch (Exception e) {
             throw new NetException("Error while parsing POST response from " + uri
                     + " into JSON object.", e);

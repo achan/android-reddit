@@ -7,9 +7,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.am05.reddit.library.things.JsonToThingConverter;
 import com.am05.reddit.library.things.Listing;
 import com.am05.reddit.library.things.Thing;
+import com.am05.reddit.library.things.utils.JsonToThingConverter;
 
 public class ListingFactory<T extends Thing> implements ThingFactory {
     private JSONObject json;

@@ -3,6 +3,8 @@ package com.am05.reddit.library.things;
 import java.util.List;
 
 public class Listing<T extends Thing> extends Thing {
+    private static final long serialVersionUID = 1L;
+
     /**
      * A list of things that this Listing wraps.
      */

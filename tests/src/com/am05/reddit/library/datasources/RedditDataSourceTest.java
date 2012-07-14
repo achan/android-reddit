@@ -5,9 +5,9 @@ import java.util.List;
 import android.test.AndroidTestCase;
 import android.util.Log;
 
-import com.am05.reddit.library.things.Comment;
 import com.am05.reddit.library.things.Link;
 import com.am05.reddit.library.things.Subreddit;
+import com.am05.reddit.library.things.Thing;
 
 public class RedditDataSourceTest extends AndroidTestCase {
     private static final String TAG = RedditDataSourceTest.class.getName();
@@ -34,14 +34,14 @@ public class RedditDataSourceTest extends AndroidTestCase {
 
     public void testGetLinksForSubreddit() {
         try {
-            getLinksForSubreddits("askreddit", "nba", "videos", "programming"); 
+            getLinksForSubreddits("askreddit", "nba", "videos", "programming");
         } catch (DataSourceException e) {
             logAndFail("failed to get links for subreddit", e);
         }
     }
-    
+
     private void getLinksForSubreddits(String... subreddits) throws DataSourceException {
-        for  (String subreddit : subreddits) {
+        for (String subreddit : subreddits) {
             List<Link> links = ds.getLinksForSubreddit(subreddit).getChildren();
             for (Link link : links) {
                 Log.v(TAG, "link: " + link);
@@ -52,10 +52,10 @@ public class RedditDataSourceTest extends AndroidTestCase {
     public void testGetCommentsForLink() {
         try {
             Link link = new Link();
-            link.setPermalink("/r/nba/comments/w3bs6/50_years_later_lingering_heat_from_wilt/");
-            List<Comment> comments = ds.getCommentsForLink(link).getChildren();
+            link.setPermalink("/r/politics/comments/wf1t2/melinda_gates_pledges_560000000_for_contraception/");
+            List<? extends Thing> comments = ds.getCommentsForLink(link).getChildren();
 
-            for (Comment comment : comments) {
+            for (Thing comment : comments) {
                 Log.v(TAG, "comment: " + comment);
             }
         } catch (DataSourceException e) {

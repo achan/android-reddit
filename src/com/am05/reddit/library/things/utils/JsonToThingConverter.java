@@ -1,8 +1,11 @@
-package com.am05.reddit.library.things;
+package com.am05.reddit.library.things.utils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.am05.reddit.library.things.Kind;
+import com.am05.reddit.library.things.More;
+import com.am05.reddit.library.things.Thing;
 import com.am05.reddit.library.things.factories.CommentFactory;
 import com.am05.reddit.library.things.factories.LinkFactory;
 import com.am05.reddit.library.things.factories.ListingFactory;
@@ -31,7 +34,7 @@ public class JsonToThingConverter<T extends Thing> {
             thingFactory = new SubredditFactory(json);
             break;
         case LISTING:
-            thingFactory = new ListingFactory<T>(json);
+            thingFactory = new ListingFactory(json);
             break;
         case THREAD:
             try {
@@ -44,6 +47,8 @@ public class JsonToThingConverter<T extends Thing> {
         case COMMENT:
             thingFactory = new CommentFactory(json);
             break;
+        case MORE:
+            return (T) new More();
         default:
             throw new UnsupportedOperationException("Kind: " + kind
                     + " conversion not yet supported.");

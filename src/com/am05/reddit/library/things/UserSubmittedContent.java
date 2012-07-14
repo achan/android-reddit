@@ -4,6 +4,8 @@ import com.am05.reddit.library.Created;
 import com.am05.reddit.library.Votable;
 
 public abstract class UserSubmittedContent extends Thing implements Created, Votable {
+    private static final long serialVersionUID = 1L;
+
     private String id;
 	private int upvotes;
 	private int downvotes;

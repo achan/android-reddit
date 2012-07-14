@@ -7,6 +7,8 @@ import org.json.JSONObject;
 import com.am05.reddit.library.JsonParsingException;
 
 public class Link extends UserSubmittedContent {
+    private static final long serialVersionUID = 1L;
+
     private boolean clicked;
     private String domain;
     private boolean hidden;

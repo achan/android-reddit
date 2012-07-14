@@ -1,11 +1,11 @@
 package com.am05.reddit.library.datasources;
 
-import com.am05.reddit.library.things.Comment;
-import com.am05.reddit.library.things.JsonToThingConverter;
 import com.am05.reddit.library.things.Link;
 import com.am05.reddit.library.things.Listing;
 import com.am05.reddit.library.things.Subreddit;
+import com.am05.reddit.library.things.Thing;
 import com.am05.reddit.library.things.factories.ThingFactoryException;
+import com.am05.reddit.library.things.utils.JsonToThingConverter;
 
 public class RedditDataSource {
     private JsonDataSource dataSource;
@@ -38,10 +38,10 @@ public class RedditDataSource {
         }
     }
 
-    public Listing<Comment> getCommentsForLink(Link link) throws DataSourceException {
+    public Listing<? extends Thing> getCommentsForLink(Link link) throws DataSourceException {
         try {
-            return new JsonToThingConverter<Listing<Comment>>().convert(dataSource.getComments(link
-                    .getPermalink()));
+            return new JsonToThingConverter<Listing<? extends Thing>>().convert(dataSource
+                    .getComments(link.getPermalink()));
         } catch (ThingFactoryException e) {
             throw new DataSourceException("Could not parse comments for link: " + link, e);
         }

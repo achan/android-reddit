@@ -1,6 +1,8 @@
 package com.am05.reddit.library.things;
 
 public class Comment extends UserSubmittedContent {
+    private static final long serialVersionUID = 1L;
+
     private String linkId;
     private String parentId;
     private Listing<Comment> replies;

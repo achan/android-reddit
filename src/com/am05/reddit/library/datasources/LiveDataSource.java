@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.cookie.BasicClientCookie;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.am05.reddit.library.net.HttpHelper;
@@ -21,7 +22,7 @@ public class LiveDataSource implements JsonDataSource {
         List<Cookie> cookies = new ArrayList<Cookie>();
         cookies.add(cookie);
         try {
-            return HttpHelper.getInstance().getJsonFromGet(URI_SUBREDDITS, cookies);
+            return HttpHelper.getInstance().getJsonObjectFromGet(URI_SUBREDDITS, cookies);
         } catch (NetException e) {
             throw new DataSourceException(
                     "error trying to parse JSON from GET @ " + URI_SUBREDDITS, e);
@@ -31,15 +32,21 @@ public class LiveDataSource implements JsonDataSource {
     public JSONObject getLinks(String subreddit) throws DataSourceException {
         String subredditUrl = URI_SUBREDDIT_PREFIX + subreddit + ".json";
         try {
-            return HttpHelper.getInstance().getJsonFromGet(subredditUrl);
+            return HttpHelper.getInstance().getJsonObjectFromGet(subredditUrl);
         } catch (NetException e) {
             throw new DataSourceException("could not get JSON response from: " + subredditUrl, e);
         }
     }
 
-    public JSONObject getComments(String permalink) {
-        // TODO Auto-generated method stub
-        return null;
+    public JSONObject getComments(String permalink) throws DataSourceException {
+        String permalinkUrl = URI_BASE + permalink + ".json";
+        try {
+            return HttpHelper.getInstance().getJsonArrayFromGet(permalinkUrl).getJSONObject(1);
+        } catch (NetException e) {
+            throw new DataSourceException("could not get JSON response from: " + permalinkUrl, e);
+        } catch (JSONException e) {
+            throw new DataSourceException("Could not parse JSON for: " + permalinkUrl, e);
+        }
     }
 
     public JSONObject getSubreddit(String subreddit) {
@@ -49,7 +56,7 @@ public class LiveDataSource implements JsonDataSource {
 
     public JSONObject getDefaultSubreddits() throws DataSourceException {
         try {
-            return HttpHelper.getInstance().getJsonFromGet(URI_SUBREDDITS);
+            return HttpHelper.getInstance().getJsonObjectFromGet(URI_SUBREDDITS);
         } catch (NetException e) {
             throw new DataSourceException("could not get JSON response from: " + URI_SUBREDDITS, e);
         }
@@ -58,7 +65,7 @@ public class LiveDataSource implements JsonDataSource {
     public JSONObject getLinksForFrontPage() throws DataSourceException {
         String frontPageUrl = URI_BASE + "/.json";
         try {
-            return HttpHelper.getInstance().getJsonFromGet(frontPageUrl);
+            return HttpHelper.getInstance().getJsonObjectFromGet(frontPageUrl);
         } catch (NetException e) {
             throw new DataSourceException("could not get JSON response from: " + frontPageUrl, e);
 

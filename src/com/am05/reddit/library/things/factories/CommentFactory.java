@@ -6,9 +6,9 @@ import org.json.JSONObject;
 import android.util.Log;
 
 import com.am05.reddit.library.things.Comment;
-import com.am05.reddit.library.things.JsonToThingConverter;
 import com.am05.reddit.library.things.Listing;
 import com.am05.reddit.library.things.Subreddit;
+import com.am05.reddit.library.things.utils.JsonToThingConverter;
 
 public class CommentFactory implements ThingFactory {
     private static final String TAG = CommentFactory.class.getName();

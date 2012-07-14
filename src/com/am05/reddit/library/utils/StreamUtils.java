@@ -19,7 +19,7 @@ public class StreamUtils {
         return instance;
     }
 
-    public String convertStreamToString(InputStream is) {
+    public String convertStreamToString(InputStream is) throws UtilsException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         String line;
         StringBuilder sb = new StringBuilder();
@@ -29,7 +29,7 @@ public class StreamUtils {
                 sb.append(line + "\n");
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new UtilsException("Couldn't read line from stream.", e);
         } finally {
             try {
                 if (is != null)

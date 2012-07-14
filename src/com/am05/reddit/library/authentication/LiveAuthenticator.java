@@ -24,7 +24,7 @@ public class LiveAuthenticator implements Authenticator {
     public LoginResult authenticate(String username, String password)
             throws AuthenticationException {
         try {
-            return new LoginResult(HttpHelper.getInstance().getJsonFromPost(
+            return new LoginResult(HttpHelper.getInstance().getJsonObjectFromPost(
                     new URI(LOGIN_URI + "/" + username),
                     nameValuePairs(PARAM_USERNAME, username, PARAM_PASSWORD, password,
                             PARAM_API_TYPE, API_TYPE_JSON)));
