@@ -23,12 +23,14 @@ import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.SingleClientConnManager;
+import org.apache.http.params.CoreProtocolPNames;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.util.Log;
 
+import com.am05.reddit.library.Constants;
 import com.am05.reddit.library.utils.StreamUtils;
 import com.am05.reddit.library.utils.UtilsException;
 
@@ -62,6 +64,11 @@ public class HttpHelper {
 
     private HttpClient buildHttpClient(List<Cookie> cookies) {
         DefaultHttpClient client = new DefaultHttpClient();
+
+        String userAgent = System.getProperty(Constants.SYSTEM_PROPERTY_USER_AGENT);
+
+        if (userAgent != null)
+            client.getParams().setParameter(CoreProtocolPNames.USER_AGENT, userAgent);
 
         if (cookies != null && !cookies.isEmpty()) {
             client.setCookieStore(buildCookieStore(cookies));
